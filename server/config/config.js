@@ -7,7 +7,6 @@ const sequelize = new Sequelize('cash_tracker', 'root', '', {
 });
 
 function connectDB() {
-    require("../models/User")
     sequelize.authenticate()
         .then(() => console.log(chalk.bold.green("Database Connected")))
         .then(() => sequelize.sync())

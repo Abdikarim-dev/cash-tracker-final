@@ -4,10 +4,11 @@ import UserTableView from "../components/UserTableView";
 import { useEffect, useState } from "react";
 import UserForm from "../components/UserForm";
 
-import { handleCreateAndEdit } from "../redux/User/User";
+import { handleCreateAndEdit, handleDeleteModal } from "../redux/User/User";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../apicalls/user";
+import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -71,7 +72,7 @@ const Users = () => {
 
       {/* Delete / Edit Modals */}
       {/* Uncomment when needed */}
-      {/* {deletingUser && (
+      {deletingUser && (
     <DeleteConfirmationModal
       title={"user"}
       modalState={deleteModal}
@@ -81,7 +82,7 @@ const Users = () => {
       getNewData={getNewData}
       setGetNewData={setGetNewData}
     />
-  )} */}
+  )}
     </div>
   );
 };

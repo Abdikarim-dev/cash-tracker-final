@@ -1,8 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/config");
 
-const userRoles = process.env.USER_ROLES
-
 const Users = sequelize.define("users", {
     id: {
         type: DataTypes.INTEGER,

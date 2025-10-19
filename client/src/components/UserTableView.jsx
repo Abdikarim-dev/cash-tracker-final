@@ -49,7 +49,9 @@ const UserTableView = ({ users }) => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center space-x-3">
                     <img
-                      src={user.image}
+                      src={`${import.meta.env.VITE_BACKEND_URL}/images/${
+                        user.image
+                      }`}
                       alt="avatar"
                       className="w-12 h-12 rounded-full shadow-sm"
                     />

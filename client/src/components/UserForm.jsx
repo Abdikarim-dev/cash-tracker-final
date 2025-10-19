@@ -7,8 +7,6 @@ import { onCancel } from "../redux/User/User";
 const UserForm = ({ getNewData, setGetNewData }) => {
   const dispatch = useDispatch();
 
-  const authUser = useSelector((s) => s.auth?.activeUser);
-
   const { editingUser: user } = useSelector((state) => state.user);
 
   const [changePass, setChangePass] = useState(false);
@@ -26,9 +24,54 @@ const UserForm = ({ getNewData, setGetNewData }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const userInfo = { username, fullname: name, email, phone, image, role };
+    // const userInfo = { username, fullname: name, email, phone, image, role };
 
-    console.log(userInfo);
+    const userFormData = new FormData();
+
+    userFormData.append("fullname", name);
+    userFormData.append("username", username);
+    userFormData.append("email", email);
+    userFormData.append("phone", phone);
+    userFormData.append("role", role);
+    if (image instanceof File) userFormData.append("image", image);
+
+    if (user) {
+      const updateObj = {
+        id: user.id,
+        user: userFormData,
+      };
+      const response = await editUser(updateObj);
+
+      if (response.success) {
+        setGetNewData(!getNewData);
+        toast.success(response.message);
+        dispatch(onCancel());
+      } else {
+        toast.error(response.message);
+      }
+    } else {
+      // Password here
+      if (password !== confirmPassword) {
+        toast.error("Passwords do not match");
+        return;
+      }
+      if (password.length < 6 || password.length > 20) {
+        toast.error("Password must be between 6 and 20 characters");
+        return;
+      }
+
+      userFormData.append("password", password);
+
+      const response = await addUser(userFormData);
+
+      if (response.success) {
+        setGetNewData(!getNewData);
+        toast.success(response.message);
+        dispatch(onCancel());
+      } else {
+        toast.error(response.message);
+      }
+    }
   };
   return (
     <div className="mx-auto bg-white shadow-md rounded-2xl p-8">
@@ -36,7 +79,11 @@ const UserForm = ({ getNewData, setGetNewData }) => {
         {user ? "Edit User" : "Create User"}
       </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-8"
+        encType="multipart/form-data"
+      >
         {/* Form Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Name */}
@@ -138,7 +185,13 @@ const UserForm = ({ getNewData, setGetNewData }) => {
           <div className="flex justify-center">
             <div className="relative w-48 h-48 rounded-xl overflow-hidden border-2 border-indigo-200 bg-gray-50 shadow-md">
               <img
-                src={URL.createObjectURL(image) || "/placeholder.svg"}
+                src={
+                  image instanceof File
+                    ? URL.createObjectURL(image)
+                    : image
+                    ? `${import.meta.env.VITE_BACKEND_URL}/upload/${image}`
+                    : "/placeholder.svg"
+                }
                 alt="User profile preview"
                 className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
               />
