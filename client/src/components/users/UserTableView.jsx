@@ -3,7 +3,7 @@ import {
   handleDeleteModal,
   handleDeletingUser,
   handleEditingUser,
-} from "../redux/User/User";
+} from "../../redux/User/User";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 const UserTableView = ({ users }) => {

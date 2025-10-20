@@ -1,8 +1,8 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser, editUser } from "../apicalls/user";
-import { onCancel } from "../redux/User/User";
+import { addUser, editUser } from "../../apicalls/user";
+import { onCancel } from "../../redux/User/User";
 
 const UserForm = ({ getNewData, setGetNewData }) => {
   const dispatch = useDispatch();
@@ -161,8 +161,8 @@ const UserForm = ({ getNewData, setGetNewData }) => {
               <option value="" disabled>
                 Select a role
               </option>
-              <option value="staff">Staff</option>
-              <option value="admin">Admin</option>
+              <option value="STAFF">Staff</option>
+              <option value="ADMIN">Admin</option>
             </select>
           </div>
 

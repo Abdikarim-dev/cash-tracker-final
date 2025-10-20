@@ -62,6 +62,8 @@ const updateAccount = async (req, res) => {
     try {
         const id = parseInt(req.params.id)
 
+        console.log(req.body)
+
         const { account_name, account_number, account_type, balance, date } = req.body;
 
         const account = await Account.findByPk(id)

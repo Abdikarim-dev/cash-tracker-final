@@ -1,4 +1,5 @@
 import {
+  FaCarCrash,
   FaHome,
   FaSignOutAlt,
   FaUsers
@@ -26,6 +27,7 @@ const Sidebar = () => {
         <ul className="space-y-2">
           <SidebarItem icon={FaHome} text="Home" href="/dashboard" />
           <SidebarItem icon={FaUsers} text="Users" href="/dashboard/user" />
+          <SidebarItem icon={FaCarCrash} text="Accounts" href="/dashboard/account" />
         </ul>
       </nav>
       <div className="flex items-center justify-center lg:justify-start p-4 border-t border-gray-200">
