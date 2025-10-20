@@ -1,31 +1,31 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { addAccount, editAccount } from "../../apicalls/Account";
-import { onCancel } from "../../redux/Account/Account";
+import { addTransaction, editTransaction } from "../../apicalls/transaction";
+import { onCancel } from "../../redux/Transaction/Transaction";
 
-const AccountForm = ({ getNewData, setGetNewData }) => {
+const TransactionForm = ({ getNewData, setGetNewData }) => {
   const dispatch = useDispatch();
 
-  const { editingAccount: account } = useSelector((state) => state.account);
+  const { editingTransaction: transaction } = useSelector((state) => state.Transaction);
 
-  const [account_name, setAccountname] = useState(account?.account_name || "");
-  const [account_number, setAccountNumber] = useState(account?.account_number || "");
-  const [account_type, setAccountType] = useState(account?.account_type || "");
-  const [balance, setBalance] = useState(account?.balance || "");
+  const [account, setAccount] = useState(transaction?.account || "");
+  const [type, setType] = useState(transaction?.type || "");
+  const [amount, setAmount] = useState(transaction?.amount || "");
+  const [description, setDescription] = useState(transaction?.description || "");
 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const accountInfo = { account_name, account_number, account_type, balance };
+    const transactionInfo = { account, description, type, amount };
 
-    if (account) {
+    if (transaction) {
       const updateObj = {
-        id: account.id,
-        account: accountInfo,
+        id: transaction.id,
+        transaction: transactionInfo,
       };
-      const response = await editAccount(updateObj);
+      const response = await editTransaction(updateObj);
 
       if (response.success) {
         setGetNewData(!getNewData);
@@ -37,7 +37,7 @@ const AccountForm = ({ getNewData, setGetNewData }) => {
     } else {
 
 
-      const response = await addAccount(accountInfo);
+      const response = await addTransaction(transactionInfo);
 
       if (response.success) {
         setGetNewData(!getNewData);
@@ -51,7 +51,7 @@ const AccountForm = ({ getNewData, setGetNewData }) => {
   return (
     <div className="mx-auto bg-white shadow-md rounded-2xl p-8">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6 pb-2">
-        {account ? "Edit Account" : "Create Account"}
+        {transaction ? "Edit Transaction" : "Create Transaction"}
       </h2>
 
       <form
@@ -64,29 +64,14 @@ const AccountForm = ({ getNewData, setGetNewData }) => {
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Account Name
+              Account No
             </label>
             <input
-              value={account_name}
-              onChange={(e) => setAccountname(e.target.value)}
+              value={account}
+              onChange={(e) => setAccount(e.target.value)}
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
               type="text"
-              name="name"
-              required
-            />
-          </div>
-
-          {/* Accountname */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Account Number
-            </label>
-            <input
-              value={account_number}
-              onChange={(e) => setAccountNumber(e.target.value)}
-              className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
-              type="text"
-              name="account_number"
+              name="accNo"
               required
             />
           </div>
@@ -94,29 +79,49 @@ const AccountForm = ({ getNewData, setGetNewData }) => {
           {/* Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Account Type
+              Role
+            </label>
+            <select
+              value={type}
+              name="role"
+              className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+              onChange={(e) => setType(e.target.value)}
+              required
+            >
+              <option value="" disabled>
+                Select a type
+              </option>
+              <option value="DEBIT">Debit</option>
+              <option value="CREDIT">Credit</option>
+            </select>
+          </div>
+
+          {/* Type */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Amount
             </label>
             <input
-              value={account_type}
-              onChange={(e) => setAccountType(e.target.value)}
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
               type="text"
-              name="account_type"
+              name="amou"
               required
             />
           </div>
 
-          {/* Phone */}
+          {/* Desc */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Balance
+              Description
             </label>
             <input
-              value={balance}
-              onChange={(e) => setBalance(e.target.value)}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
-              type="number"
-              name="balance"
+              type="text"
+              name="desc"
               required
             />
           </div>
@@ -135,7 +140,7 @@ const AccountForm = ({ getNewData, setGetNewData }) => {
             type="submit"
             className="px-5 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
           >
-            {account ? "Update Account" : "Create Account"}
+            {transaction ? "Update Transaction" : "Create Transaction"}
           </button>
         </div>
       </form>
@@ -143,4 +148,4 @@ const AccountForm = ({ getNewData, setGetNewData }) => {
   );
 };
 
-export default AccountForm;
+export default TransactionForm;

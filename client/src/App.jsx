@@ -12,6 +12,8 @@ import DashboardLayout from "./components/DashboardLayout";
 // import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Accounts from "./pages/Accounts";
+import TransferAmounts from "./pages/TransferAmounts";
+import Transactions from "./pages/Transactions";
 
 const App = () => {
   return (
@@ -20,11 +22,12 @@ const App = () => {
         <Route path="/" element={<Login />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
-          
             {/* Admin-only routes */}
             <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
               <Route path="user" element={<Users />} />
               <Route path="account" element={<Accounts />} />
+              <Route path="transfer" element={<TransferAmounts />} />
+              <Route path="transaction" element={<Transactions />} />
               {/* <Route path="category" element={<Category />} />
               <Route path="audit-log" element={<AuditLogs />} />
               <Route path="store" element={<Store />} /> */}

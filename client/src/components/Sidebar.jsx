@@ -2,6 +2,8 @@ import {
   FaCarCrash,
   FaHome,
   FaSignOutAlt,
+  FaStarAndCrescent,
+  FaTrademark,
   FaUsers
 } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -17,8 +19,8 @@ const Sidebar = () => {
       <div className="flex items-center justify-center h-16 border-b border-gray-200">
         {/* Logo */}
         <span className="text-2xl font-semibold">
-          <h2 className="hidden lg:block">StockMate</h2>
-          <h4 className="lg:hidden">S</h4>
+          <h2 className="hidden lg:block">CASH TRACKER</h2>
+          <h4 className="lg:hidden">CT</h4>
         </span>
       </div>
       
@@ -28,6 +30,8 @@ const Sidebar = () => {
           <SidebarItem icon={FaHome} text="Home" href="/dashboard" />
           <SidebarItem icon={FaUsers} text="Users" href="/dashboard/user" />
           <SidebarItem icon={FaCarCrash} text="Accounts" href="/dashboard/account" />
+          <SidebarItem icon={FaTrademark} text="Transactions" href="/dashboard/transaction" />
+          <SidebarItem icon={FaStarAndCrescent} text="Transfer" href="/dashboard/transfer" />
         </ul>
       </nav>
       <div className="flex items-center justify-center lg:justify-start p-4 border-t border-gray-200">

@@ -1,12 +1,12 @@
 import { useDispatch } from "react-redux";
 import {
   handleDeleteModal,
-  handleDeletingAccount,
-  handleEditingAccount,
-} from "../../redux/Account/Account";
+  handleDeletingTransaction,
+  handleEditingTransaction,
+} from "../../redux/Transaction/Transaction";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-const AccountTableView = ({ accounts }) => {
+const TransactionTableView = ({ transactions }) => {
   const dispatch = useDispatch();
 
   return (
@@ -17,16 +17,16 @@ const AccountTableView = ({ accounts }) => {
           <thead className="bg-gradient-to-r from-primary/30 to-primary/10">
             <tr>
               <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                Account Name
+                Account
               </th>
               <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                Account Number
+                Type
               </th>
               <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                Account Type
+                Amount
               </th>
               <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                Balance
+                Description
               </th>
               <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                 Actions
@@ -36,37 +36,37 @@ const AccountTableView = ({ accounts }) => {
 
           {/* Table Body */}
           <tbody className="bg-white divide-y divide-gray-200">
-            {accounts?.map((account, index) => (
+            {transactions?.map((transaction, index) => (
               <tr
-                key={account.id}
+                key={transaction.id}
                 className={`transition duration-200 ${
                   index % 2 === 0
                     ? "bg-white hover:bg-gray-100"
                     : "bg-gray-50 hover:bg-gray-200"
                 }`}
               >
-                {/* Account Name */}
+                {/* Transaction Name */}
                 <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">
-                  {account.account_name}
+                  {transaction.account}
                 </td>
-                {/* Account Number */}
+                {/* Transaction Number */}
                 <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">
-                  {account.account_number}
+                  {transaction.type}
                 </td>
-                {/* Account Type */}
+                {/* Transaction Type */}
                 <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">
-                  {account.account_type}
+                  {transaction.amount}
                 </td>
                 {/* Balance */}
                 <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">
-                  {account.balance}
+                  {transaction.description}
                 </td>
 
                 {/* Actions */}
                 <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
                   {/* Edit Button */}
                   <button
-                    onClick={() => dispatch(handleEditingAccount(account))}
+                    onClick={() => dispatch(handleEditingTransaction(transaction))}
                     className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-700 transition-colors duration-200 shadow-sm"
                     title="Edit User"
                   >
@@ -76,7 +76,7 @@ const AccountTableView = ({ accounts }) => {
                   {/* Delete Button */}
                   <button
                     onClick={() => {
-                      dispatch(handleDeletingAccount(account));
+                      dispatch(handleDeletingTransaction(transaction));
                       dispatch(handleDeleteModal(true));
                     }}
                     className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-700 transition-colors duration-200 shadow-sm"
@@ -94,4 +94,4 @@ const AccountTableView = ({ accounts }) => {
   );
 };
 
-export default AccountTableView;
+export default TransactionTableView;

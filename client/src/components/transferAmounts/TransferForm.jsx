@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addTransferAmount,
   editTransferAmount,
-} from "../../apicalls/transaction";
+} from "../../apicalls/transferAmount";
 import { onCancel } from "../../redux/TransferAmount/TransferAmount";
 
 const TransferAmountForm = ({ getNewData, setGetNewData }) => {
@@ -36,7 +36,7 @@ const TransferAmountForm = ({ getNewData, setGetNewData }) => {
     if (transferAmount) {
       const updateObj = {
         id: transferAmount.id,
-        TransferAmount: transferAmountInfo,
+        transferAmount: transferAmountInfo,
       };
       const response = await editTransferAmount(updateObj);
 
@@ -62,7 +62,7 @@ const TransferAmountForm = ({ getNewData, setGetNewData }) => {
   return (
     <div className="mx-auto bg-white shadow-md rounded-2xl p-8">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6 pb-2">
-        {TransferAmount ? "Edit TransferAmount" : "Create TransferAmount"}
+        {transferAmount ? "Edit TransferAmount" : "Create TransferAmount"}
       </h2>
 
       <form
@@ -75,14 +75,14 @@ const TransferAmountForm = ({ getNewData, setGetNewData }) => {
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              TransferAmount Name
+              From Account No
             </label>
             <input
-              value={TransferAmount_name}
-              onChange={(e) => setTransferAmountname(e.target.value)}
+              value={from_account}
+              onChange={(e) => setFromAccount(e.target.value)}
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
               type="text"
-              name="name"
+              name="fromAcc"
               required
             />
           </div>
@@ -90,14 +90,14 @@ const TransferAmountForm = ({ getNewData, setGetNewData }) => {
           {/* TransferAmountname */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              TransferAmount Number
+              To Account No
             </label>
             <input
-              value={TransferAmount_number}
-              onChange={(e) => setTransferAmountNumber(e.target.value)}
+              value={to_account}
+              onChange={(e) => setToAccount(e.target.value)}
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
               type="text"
-              name="TransferAmount_number"
+              name="toAcc"
               required
             />
           </div>
@@ -105,14 +105,14 @@ const TransferAmountForm = ({ getNewData, setGetNewData }) => {
           {/* Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              TransferAmount Type
+              Description
             </label>
             <input
-              value={TransferAmount_type}
-              onChange={(e) => setTransferAmountType(e.target.value)}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
               type="text"
-              name="TransferAmount_type"
+              name="desc"
               required
             />
           </div>
@@ -123,11 +123,11 @@ const TransferAmountForm = ({ getNewData, setGetNewData }) => {
               Balance
             </label>
             <input
-              value={balance}
-              onChange={(e) => setBalance(e.target.value)}
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
               type="number"
-              name="balance"
+              name="amou"
               required
             />
           </div>
@@ -146,7 +146,7 @@ const TransferAmountForm = ({ getNewData, setGetNewData }) => {
             type="submit"
             className="px-5 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
           >
-            {TransferAmount ? "Update TransferAmount" : "Create TransferAmount"}
+            {transferAmount ? "Update TransferAmount" : "Create TransferAmount"}
           </button>
         </div>
       </form>
