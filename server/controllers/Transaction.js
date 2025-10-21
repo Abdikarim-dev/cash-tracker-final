@@ -1,3 +1,5 @@
+const Account = require("../models/Account")
+const Audit = require("../models/Audit")
 const Transaction = require("../models/Transaction")
 
 const getTransactions = async (_, res) => {
@@ -25,6 +27,8 @@ const createTransaction = async (req, res) => {
     try {
         const { type, account, amount, description, date } = req.body;
 
+        const accountInfo = await Account.findOne({ where: { id: account } })
+
         if (!type || !account || !amount)
             return res.status(404).json({
                 message: "All Fields are required!",
@@ -32,6 +36,17 @@ const createTransaction = async (req, res) => {
             });
 
         const newTransaction = await Transaction.create({ type, account, amount, description, date, userId: req.user.id });
+
+        const auditId = await generateCustomId("AUD");
+        const txnId = await generateCustomId("TXN");
+        await Audit.create({
+            id: auditId,
+            action: "CREATE",
+            tableName: "Transactions",
+            recordId: txnId,
+            description: `Created transaction Account:${accountInfo.account_name}, Amount:${amount ? amount : 0}`,
+            userId: req.user.id,
+        });
 
         res.status(201).json({
             success: true,
@@ -54,11 +69,24 @@ const updateTransaction = async (req, res) => {
         const { type, account, amount, description, date } = req.body;
 
         const transaction = await Transaction.findByPk(id)
+        const oldAccountInfo = await Account.findOne({ where: { id: transaction.account } })
+        const newAccountInfo = await Account.findOne({ where: { id: account } })
 
-        if (!transaction) return res.status(404).json({ success: false, message: "Account not found " })
+        if (!transaction) return res.status(404).json({ success: false, message: "Transaction not found " })
 
         const updateTransaction = await Transaction.update({ type, account, amount, description, date }, {
             where: { id }
+        });
+
+        const auditId = await generateCustomId("AUD");
+        const txnId = await generateCustomId("TXN");
+        await Audit.create({
+            id: auditId,
+            action: "UPDATE",
+            tableName: "Transactions",
+            recordId: txnId,
+            description: `Updated transaction Account:${newAccountInfo ? newAccountInfo.account_name : oldAccountInfo.account_name}, Amount:${amount ? amount : transaction.amount}`,
+            userId: req.user.id,
         });
         res.status(201).json({
             success: true,
@@ -83,6 +111,17 @@ const deleteTransaction = async (req, res) => {
         if (!transaction) return res.status(404).json({ success: false, message: "Transaction not found" })
 
         const deletedTransaction = await Transaction.destroy({ where: { id } })
+
+        const auditId = await generateCustomId("AUD");
+        await Audit.create({
+            id: auditId,
+            action: "DELETE",
+            tableName: "Transactions",
+            recordId: transaction.id,
+            description: `Deleted transaction "${transaction.id}"`,
+            userId: req.user.id,
+        });
+
 
         res.status(200).json({
             success: true,
