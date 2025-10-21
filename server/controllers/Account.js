@@ -54,7 +54,7 @@ const createAccount = async (req, res) => {
             tableName: "Accounts",
             recordId: id, // 👈 same design, e.g. "ACC-001"
             description: `Created new account "${account_name}"`,
-            user: req.user.username
+            userId: req.user.id
         });
 
         res.status(201).json({
@@ -75,8 +75,6 @@ const updateAccount = async (req, res) => {
     try {
         const id = parseInt(req.params.id)
 
-        console.log(req.body)
-
         const { account_name, account_number, account_type, balance, date } = req.body;
 
         const account = await Account.findByPk(id)
@@ -89,6 +87,18 @@ const updateAccount = async (req, res) => {
                 where: { id }
             }
         );
+
+        // Log the audit
+        const auditId = await generateCustomId("AUD");
+        await Audit.create({
+            id: auditId,
+            action: "UPDATE",
+            tableName: "Accounts",
+            recordId: id, // 👈 same design, e.g. "ACC-001"
+            description: `Updated account "${account_name}"`,
+            userId: req.user.id
+        });
+
         res.status(200).json({
             success: true,
             message: "Account has been updated successfully ",
@@ -111,6 +121,17 @@ const deleteAccount = async (req, res) => {
         if (!account) return res.status(404).json({ success: false, message: "Account not found" })
 
         const deletedAccount = await Account.destroy({ where: { id } })
+
+        // Log the audit
+        const auditId = await generateCustomId("AUD");
+        await Audit.create({
+            id: auditId,
+            action: "DELETE",
+            tableName: "Accounts",
+            recordId: id, // 👈 same design, e.g. "ACC-001"
+            description: `Deleted account "${account_name}"`,
+            userId: req.user.id
+        });
 
         res.status(200).json({
             success: true,
