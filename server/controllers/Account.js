@@ -1,3 +1,5 @@
+const Audit = require("../models/Audit")
+const generateCustomId = require("../utils/generateCustomId")
 const Account = require("./../models/Account")
 
 const getAccounts = async (_, res) => {
@@ -42,6 +44,17 @@ const createAccount = async (req, res) => {
             balance,
             date,
             userId: req.user.id
+        });
+
+        // Log the audit
+        const auditId = await generateCustomId("AUD");
+        await Audit.create({
+            id: auditId,
+            action: "CREATE",
+            tableName: "Accounts",
+            recordId: id, // 👈 same design, e.g. "ACC-001"
+            description: `Created new account "${account_name}"`,
+            user: req.user.username
         });
 
         res.status(201).json({

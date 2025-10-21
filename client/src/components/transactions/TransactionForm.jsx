@@ -7,7 +7,7 @@ import { onCancel } from "../../redux/Transaction/Transaction";
 const TransactionForm = ({ getNewData, setGetNewData }) => {
   const dispatch = useDispatch();
 
-  const { editingTransaction: transaction } = useSelector((state) => state.Transaction);
+  const { editingTransaction: transaction } = useSelector((state) => state.transaction);
 
   const [account, setAccount] = useState(transaction?.account || "");
   const [type, setType] = useState(transaction?.type || "");
