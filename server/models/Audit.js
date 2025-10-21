@@ -2,6 +2,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/config");
 const Counter = require("./Counter");
+const Users = require("./User");
 
 const Audit = sequelize.define("Audit", {
     id: {
@@ -23,9 +24,13 @@ const Audit = sequelize.define("Audit", {
     description: {
         type: DataTypes.STRING,
     },
-    user: {
-        type: DataTypes.STRING,
+    userId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+            model: Users,
+            key: "id"
+        }
     },
     date: {
         type: DataTypes.DATE,
@@ -35,5 +40,11 @@ const Audit = sequelize.define("Audit", {
     tableName: "audits",
     timestamps: true,
 });
+
+// ASSOCIATION FOR THE USER INFO
+Audit.belongsTo(Users, {
+    foreignKey: "userId",
+    as: "userInfo"
+})
 
 module.exports = Audit
