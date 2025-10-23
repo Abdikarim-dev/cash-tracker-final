@@ -1,4 +1,7 @@
+const Account = require("../models/Account")
+const Audit = require("../models/Audit")
 const TransferAmount = require("../models/TransferAmount")
+const generateCustomId = require("../utils/generateCustomId")
 
 const getTransfers = async (_, res) => {
     try {
@@ -31,7 +34,22 @@ const createTransfer = async (req, res) => {
                 success: false
             });
 
+        const fromAcc = await Account.findByPk(from_account)
+        const toAcc = await Account.findByPk(to_account)
+
         const newTransfer = await TransferAmount.create({ from_account, to_account, amount, description, date, userId: req.user.id });
+
+        const auditId = await generateCustomId("AUD");
+        const trfId = await generateCustomId("TRF");
+        await Audit.create({
+            id: auditId,
+            action: "CREATE",
+            tableName: "Transfers",
+            recordId: trfId, // e.g. "TRF-001"
+            description: `Transferred ${amount} from account "${fromAcc.account_name}" to "${toAcc.account_name}"`,
+            userId: req.user.id,
+        });
+
 
         res.status(201).json({
             success: true,
@@ -60,6 +78,19 @@ const updateTransfer = async (req, res) => {
         const updateTransfer = await TransferAmount.update({ from_account, to_account, amount, description, date }, {
             where: { id }
         });
+
+        const auditId = await generateCustomId("AUD");
+        const trfId = await generateCustomId("TRF");
+        await Audit.create({
+            id: auditId,
+            action: "UPDATE",
+            tableName: "Transfers",
+            recordId: trfId,
+            description: `Updated transfer "${transfer.id}" amount to ${transfer.amount}`,
+            userId: req.user.id,
+        });
+
+
         res.status(201).json({
             success: true,
             message: "Transfer Updated Successfully",
@@ -89,6 +120,18 @@ const deleteTransfer = async (req, res) => {
             message: "Transfer has been deleted",
             data: deletedTransfer
         })
+
+        const auditId = await generateCustomId("AUD");
+        const trfId = await generateCustomId("TRF");
+        await Audit.create({
+            id: auditId,
+            action: "DELETE",
+            tableName: "Transfers",
+            recordId: trfId,
+            description: `Deleted transfer"`,
+            userId: req.user.id,
+        });
+
 
     } catch (error) {
         res.status(400).json({
