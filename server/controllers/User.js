@@ -2,6 +2,8 @@ const { Op } = require("sequelize")
 const Users = require("../models/User")
 
 const bcrypt = require("bcrypt")
+const Audit = require("../models/Audit")
+const generateCustomId = require("../utils/generateCustomId")
 
 const getUsers = async (_, res) => {
     try {
@@ -72,6 +74,17 @@ const createUser = async (req, res) => {
             password: hashedPassword,
         });
 
+        const auditId = await generateCustomId("AUD");
+        const usrId = await generateCustomId("USR");
+        await Audit.create({
+            id: auditId,
+            action: "CREATE",
+            tableName: "Users",
+            recordId: usrId,
+            description: `Created new user "${username}" with role ${role ? role : "STAFF"}`,
+            userId: req.user.id,
+        });
+
         res.status(201).json({
             success: true,
             message: "User Created Successfully",
@@ -110,6 +123,19 @@ const updateUser = async (req, res) => {
                 where: { id }
             }
         );
+
+        const auditId = await generateCustomId("AUD");
+        const usrId = await generateCustomId("USR");
+        await Audit.create({
+            id: auditId,
+            action: "UPDATE",
+            tableName: "Users",
+            recordId: usrId,
+            description: `Updated user "${username ? username : user.username}" information`,
+            userId: req.user.id,
+        });
+
+
         res.status(200).json({
             success: true,
             message: "a user has been updated successfully ",
@@ -132,6 +158,17 @@ const deleteUser = async (req, res) => {
         if (!user) return res.status(404).json({ success: false, message: "user not found" })
 
         const deletedUser = await Users.destroy({ where: { id } })
+
+        const auditId = await generateCustomId("AUD");
+        const usrId = await generateCustomId("USR");
+        await Audit.create({
+            id: auditId,
+            action: "DELETE",
+            tableName: "Users",
+            recordId: usrId,
+            description: `Deleted user "${user.username}"`,
+            userId: req.user.id,
+        });
 
         res.status(200).json({
             success: true,
