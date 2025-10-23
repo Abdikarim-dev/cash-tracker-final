@@ -92,7 +92,7 @@ const TransferAmounts = () => {
       {/* Delete / Edit Modals */}
       {deletingTransferAmount && (
         <DeleteConfirmationModal
-          title={"TransferAmount"}
+          title={"transfer"}
           modalState={deleteModal}
           object={deletingTransferAmount}
           onCancel={() => dispatch(handleDeleteModal(false))}

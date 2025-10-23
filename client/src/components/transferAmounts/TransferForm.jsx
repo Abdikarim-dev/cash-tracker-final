@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -6,6 +6,7 @@ import {
   editTransferAmount,
 } from "../../apicalls/transferAmount";
 import { onCancel } from "../../redux/TransferAmount/TransferAmount";
+import { getAccounts } from "../../apicalls/Account";
 
 const TransferAmountForm = ({ getNewData, setGetNewData }) => {
   const dispatch = useDispatch();
@@ -22,6 +23,16 @@ const TransferAmountForm = ({ getNewData, setGetNewData }) => {
     transferAmount?.description || ""
   );
   const [amount, setAmount] = useState(transferAmount?.amount || "");
+
+  const [accounts, setAccounts] = useState([]);
+
+  useEffect(() => {
+    const getAccountsData = async () => {
+      const response = await getAccounts();
+      if (response.success) setAccounts(response.accounts);
+    };
+    getAccountsData();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -72,37 +83,53 @@ const TransferAmountForm = ({ getNewData, setGetNewData }) => {
       >
         {/* Form Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Name */}
+          
+          {/* FROM ACCOUNT */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              From Account No
+              From Account
             </label>
-            <input
+            <select
               value={from_account}
-              onChange={(e) => setFromAccount(e.target.value)}
+              name="role"
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
-              type="text"
-              name="fromAcc"
+              onChange={(e) => setFromAccount(e.target.value)}
               required
-            />
+            >
+              <option value="" disabled>
+                Select Account
+              </option>
+              {accounts.map((acc) => (
+                <option key={acc.id} value={acc.id}>
+                  {acc.account_name} ({acc.account_number})
+                </option>
+              ))}
+            </select>
           </div>
-
-          {/* TransferAmountname */}
+          {/* TO ACCOUNT */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              To Account No
+              To Account
             </label>
-            <input
+            <select
               value={to_account}
-              onChange={(e) => setToAccount(e.target.value)}
+              name="role"
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
-              type="text"
-              name="toAcc"
+              onChange={(e) => setToAccount(e.target.value)}
               required
-            />
+            >
+              <option value="" disabled>
+                Select Account
+              </option>
+              {accounts.map((acc) => (
+                <option key={acc.id} value={acc.id}>
+                  {acc.account_name} ({acc.account_number})
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Type */}
+          {/* DESC */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Description
