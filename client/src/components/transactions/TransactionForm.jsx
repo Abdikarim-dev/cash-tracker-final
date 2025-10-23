@@ -1,24 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { addTransaction, editTransaction } from "../../apicalls/transaction";
 import { onCancel } from "../../redux/Transaction/Transaction";
+import { getAccounts } from "../../apicalls/Account";
 
 const TransactionForm = ({ getNewData, setGetNewData }) => {
   const dispatch = useDispatch();
 
-  const { editingTransaction: transaction } = useSelector((state) => state.transaction);
+  const { editingTransaction: transaction } = useSelector(
+    (state) => state.transaction
+  );
 
   const [account, setAccount] = useState(transaction?.account || "");
   const [type, setType] = useState(transaction?.type || "");
   const [amount, setAmount] = useState(transaction?.amount || "");
-  const [description, setDescription] = useState(transaction?.description || "");
+  const [description, setDescription] = useState(
+    transaction?.description || ""
+  );
 
+  const [currentItem, setCurrentItem] = useState(null);
+  const [accounts, setAccounts] = useState([]);
+
+  useEffect(() => {
+    const getAccountsData = async () => {
+      const response = await getAccounts();
+      if (response.success) setAccounts(response.accounts);
+    };
+    getAccountsData();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const transactionInfo = { account, description, type, amount };
+    const transactionInfo = {
+      accountId: Number(account),
+      description,
+      type,
+      amount: Number(amount),
+    };
 
     if (transaction) {
       const updateObj = {
@@ -35,8 +55,6 @@ const TransactionForm = ({ getNewData, setGetNewData }) => {
         toast.error(response.message);
       }
     } else {
-
-
       const response = await addTransaction(transactionInfo);
 
       if (response.success) {
@@ -47,6 +65,13 @@ const TransactionForm = ({ getNewData, setGetNewData }) => {
         toast.error(response.message);
       }
     }
+  };
+
+  const handleAcc = (e) => {
+    const selectedId = e.target.value;
+    setAccount(selectedId);
+    const findAcc = accounts.find((acc) => acc.id == selectedId);
+    setCurrentItem(findAcc);
   };
   return (
     <div className="mx-auto bg-white shadow-md rounded-2xl p-8">
@@ -61,29 +86,53 @@ const TransactionForm = ({ getNewData, setGetNewData }) => {
       >
         {/* Form Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Name */}
+          {/* FROM ACCOUNT */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Account No
+              Account
             </label>
-            <input
+            <select
               value={account}
-              onChange={(e) => setAccount(e.target.value)}
+              name="acc"
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
-              type="text"
-              name="accNo"
+              onChange={handleAcc}
               required
-            />
+            >
+              <option value="" disabled>
+                Select Account
+              </option>
+              {accounts.map((acc) => (
+                <option key={acc.id} value={acc.id}>
+                  {acc.account_name} ({acc.account_number})
+                </option>
+              ))}
+            </select>
           </div>
+
+          {/* Balance */}
+          {currentItem && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Balance
+              </label>
+              <input
+                value={currentItem && currentItem.balance}
+                className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                type="number"
+                name="blnc"
+                readOnly
+              />
+            </div>
+          )}
 
           {/* Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Role
+              Type
             </label>
             <select
               value={type}
-              name="role"
+              name="type"
               className="mt-1 w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
               onChange={(e) => setType(e.target.value)}
               required
