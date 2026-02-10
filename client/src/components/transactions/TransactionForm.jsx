@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { addTransaction, editTransaction } from "../../apicalls/transaction";
 import { onCancel } from "../../redux/Transaction/Transaction";
-import { getAccounts } from "../../apicalls/Account";
+import { getAccounts } from "../../apicalls/account";
 
 const TransactionForm = ({ getNewData, setGetNewData }) => {
   const dispatch = useDispatch();
@@ -140,8 +140,8 @@ const TransactionForm = ({ getNewData, setGetNewData }) => {
               <option value="" disabled>
                 Select a type
               </option>
-              <option value="DEBIT">Debit</option>
-              <option value="CREDIT">Credit</option>
+              <option value="DEBIT">Debit (+)</option>
+              <option value="CREDIT">Credit(-)</option>
             </select>
           </div>
 

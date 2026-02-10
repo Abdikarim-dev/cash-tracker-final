@@ -185,13 +185,7 @@ const UserForm = ({ getNewData, setGetNewData }) => {
           <div className="flex justify-center">
             <div className="relative w-48 h-48 rounded-xl overflow-hidden border-2 border-indigo-200 bg-gray-50 shadow-md">
               <img
-                src={
-                  image instanceof File
-                    ? URL.createObjectURL(image)
-                    : image
-                    ? `${import.meta.env.VITE_BACKEND_URL}/upload/${image}`
-                    : "/placeholder.svg"
-                }
+                src={image}
                 alt="User profile preview"
                 className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
               />

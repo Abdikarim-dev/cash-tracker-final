@@ -1,7 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { addAccount, editAccount } from "../../apicalls/Account";
+import { addAccount, editAccount } from "../../apicalls/account";
 import { onCancel } from "../../redux/Account/Account";
 
 const AccountForm = ({ getNewData, setGetNewData }) => {

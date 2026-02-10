@@ -6,7 +6,7 @@ import {
   editTransferAmount,
 } from "../../apicalls/transferAmount";
 import { onCancel } from "../../redux/TransferAmount/TransferAmount";
-import { getAccounts } from "../../apicalls/Account";
+import { getAccounts } from "../../apicalls/account";
 
 const TransferAmountForm = ({ getNewData, setGetNewData }) => {
   const dispatch = useDispatch();

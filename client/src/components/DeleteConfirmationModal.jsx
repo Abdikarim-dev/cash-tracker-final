@@ -6,7 +6,7 @@ import {
 } from "@headlessui/react";
 import toast from "react-hot-toast";
 import { BsExclamationTriangle } from "react-icons/bs";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 // import { addAuditLog } from "../redux/Audit/Audit";
 import deleteObject from "../apicalls/dynamicDelete";
 
