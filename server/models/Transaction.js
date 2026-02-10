@@ -4,7 +4,7 @@ const Users = require("./User");
 
 const Account = require("./Account")
 
-const Transaction = sequelize.define("Transaction", {
+const Transaction = sequelize.define("transactions", {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,

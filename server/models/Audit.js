@@ -4,7 +4,7 @@ const { sequelize } = require("../config/config");
 const Counter = require("./Counter");
 const Users = require("./User");
 
-const Audit = sequelize.define("Audit", {
+const Audit = sequelize.define("audits", {
     id: {
         type: DataTypes.STRING,
         primaryKey: true

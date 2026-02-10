@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/config");
 
-const Counter = sequelize.define("Counter", {
+const Counter = sequelize.define("counters", {
     prefix: {
         type: DataTypes.STRING,
         primaryKey: true,
